@@ -306,9 +306,14 @@ def get_accelerate_model(args, checkpoint_dir):
 
     if args.full_finetune: assert args.bits in [16, 32]
 
+    #temp set to run on two gpu
+    device_map = "auto"
+    max_memory = {i: '15000MB' for i in range(torch.cuda.device_count())}
+
     print(f'loading base model {args.model_name_or_path}...')
     print(f'max memory {max_memory}')
     print(f'args {args}')
+    print(f'device_map {device_map}')
     compute_dtype = (torch.float16 if args.fp16 else (torch.bfloat16 if args.bf16 else torch.float32))
     model = AutoModelForCausalLM.from_pretrained(
         args.model_name_or_path,
