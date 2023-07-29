@@ -1,4 +1,5 @@
 
+可以用QLORA对模型进行量化 尝试过13B的大模型在32G V100训练
 
 # QLoRA: Efficient Finetuning of Quantized LLMs
 
