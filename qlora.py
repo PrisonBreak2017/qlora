@@ -22,6 +22,20 @@ import torch
 import transformers
 from torch.nn.utils.rnn import pad_sequence
 import argparse
+
+#在kaggle 双T4上开启
+import os
+# 自动检测可用的 GPU 设备数量
+device_count = torch.cuda.device_count()
+
+# 构建逗号分隔的 GPU 设备列表字符串
+gpu_devices = ','.join([str(i) for i in range(device_count)])
+
+# 设置 CUDA_VISIBLE_DEVICES 环境变量
+os.environ["CUDA_VISIBLE_DEVICES"] = gpu_devices
+
+
+
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
@@ -617,6 +631,7 @@ def make_data_module(tokenizer: transformers.PreTrainedTokenizer, args) -> Dict:
                 'input': x['text'].split('\n<bot>: ')[0].replace('<human>: ', ''),
                 'output': x['text'].split('\n<bot>: ')[1],
             })
+        
         elif dataset_format == 'self-instruct' or (dataset_format is None and args.dataset == 'self-instruct'):
             for old, new in [["prompt", "input"], ["completion", "output"]]:
                 dataset = dataset.rename_column(old, new)
