@@ -205,7 +205,7 @@ class TrainingArguments(transformers.Seq2SeqTrainingArguments):
         metadata={"help": "Free memory per gpu."}
     )
     report_to: str = field(
-        default='none',
+        default='wandb',
         metadata={"help": "To use wandb or something else for reporting."}
     )
     output_dir: str = field(default='./output', metadata={"help": 'The output dir for logs and checkpoints'})
@@ -301,7 +301,7 @@ class SavePeftModelCallback(transformers.TrainerCallback):
         self.save_model(args, state, kwargs)
 
 def get_accelerate_model(args, checkpoint_dir):
-
+    n_gpus =0 
     if torch.cuda.is_available():
         n_gpus = torch.cuda.device_count()
     if is_ipex_available() and torch.xpu.is_available():
